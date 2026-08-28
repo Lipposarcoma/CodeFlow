@@ -1,5 +1,9 @@
 
-/* NOTAS DEL MIGU,;AQUÍ HAY QUE ORDENAR CALETA WEON */
+/* 
+
+SECCION DE CONFIGURACIÓN DEL BODY
+
+*/
 
 :root {
   --bg:#08090D;--surface:#0F1016;--surface2:#16171E;--surface3:#1E1F28;
@@ -21,16 +25,44 @@
   --text:#111218;--text2:#44465A;--muted:#7A7C96;--muted2:#B0B2CC;--shadow:rgba(0,0,0,.12);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
 html{height:100%;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;height:100vh;overflow:hidden;transition:var(--transition-theme);}
-#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity .5s;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+  transition:var(--transition-theme);
+}
+
+#bg-canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  transition:opacity .5s;
+}
+
 [data-theme="light"] #bg-canvas{opacity:.15;}[data-theme="dark"] #bg-canvas{opacity:.45;}
-body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
+
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px;
+}
+
 [data-theme="light"] body::after{opacity:.012;}[data-theme="dark"] body::after{opacity:.02;}
 
 /*
 --------------------------------------------------------------------------
-0- Contenedor del .topbar
+CONTENEDOR DEL TOPBAR
 -------------------------------------------------------------------------- 
 */
 
@@ -49,6 +81,12 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   background:linear-gradient(to bottom,var(--bg) 60%,transparent);
   pointer-events:none;
 }
+
+/* 
+
+Aqui justo abajo esta le icono para cambiarel aspecto a blanco u oscuro
+
+*/
 
 .topbar-actions{
   display:flex;
@@ -77,7 +115,7 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
 
 /*
 --------------------------------------------------------------------------
-1- CONTENEDOR PRINCIPAL (.sidebar)
+CONTENEDOR DEL SIDEBAR
 -------------------------------------------------------------------------- 
 */
 
@@ -123,6 +161,14 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   );
 }
 
+/*
+
+Aqui esta el titulo o marca de nuestra pagina, es editable en todos los aspectos
+
+*/
+
+
+
 .brand {
   font-family: var(--font-brand, 'Syne', sans-serif);
   font-size: 20px;
@@ -165,9 +211,10 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
 
 
 /* 
---------------------------------------------------------------------------
-3. RESUMEN DE NIVEL Y GAMIFICACIÓN (.level-badge & XP)
--------------------------------------------------------------------------- 
+
+Aqui se encuentra el campo con el NIVEL y DENOMINACIÓN DEL USUARIO
+
+
 */
 
 .level-badge{
@@ -196,6 +243,12 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   color:var(--muted);
   margin-top:1px;
 }
+
+/* 
+
+Aqui se encuentra el campo con el progreso ACTUAL en XP del usuario
+
+*/
 
 .xp-sidebar-wrap{
   padding:6px 12px 2px;
@@ -230,6 +283,12 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   box-shadow:0 0 8px rgba(251,191,36,.3);
 }
 
+/*
+
+Campo de progreso xp faltante del proximo nivel
+
+*/
+
 .cosmetic-hint{
   padding:8px 12px;
   margin:4px 0;
@@ -249,12 +308,12 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
 
 /* 
 --------------------------------------------------------------------------
-4. TITULARES DE NAVEGACIÓN (.nav-section)
+TITULARES DE NAVEGACIÓN (.nav-section) de
 -------------------------------------------------------------------------- 
 */
 
 
-/* index.css - Optimización de .nav-section */
+
 .nav-section {
   font-family: var(--font-brand, 'Syne', sans-serif); 
   font-size:15px;               
@@ -277,11 +336,6 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent);
 }
 
-/* 
---------------------------------------------------------------------------
-5. ÍTEMS DE NAVEGACIÓN (.nav-item)
---------------------------------------------------------------------------
-*/
 
 .nav-item{
   display:flex;

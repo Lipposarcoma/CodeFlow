@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CodeFlow — LógicaPro</title>
 
-<!-- Carga de fuentes institucionales (Arial / Arimo equivalente) -->
-
 <link rel="stylesheet" href="styles/index.css">
-
-
 
 </head>
 <body>
@@ -32,24 +28,31 @@
       <div class="level-badge-sub" id="level-sub">Nivel 1 · 0 XP</div>
     </div>
   </div>
+
   <div class="xp-sidebar-wrap">
     <div class="xp-sidebar-label"><span>Progreso</span><span id="xp-label-val">0 / 100 XP</span></div>
     <div class="xp-sidebar-bar"><div class="xp-sidebar-fill" id="xp-bar-fill" style="width:0%"></div></div>
   </div>
+
   <div class="cosmetic-hint" id="cosmetic-hint">
     <strong id="next-unlock-label">🔓 Próximo: Nivel 2</strong>
     <span id="next-unlock-desc">Alcanza 100 XP para desbloquear el tema Galaxia</span>
   </div>
+  
   <div style="height:6px"></div>
+
   <div class="nav-section">Plataforma</div>
   <div class="nav-item active" id="nav-map" onclick="navTo('view-map',this)"><span class="nav-icon">📚</span> Rutas de Aprendizaje</div>
   <div class="nav-item" id="nav-analytics" onclick="navTo('view-analytics',this)"><span class="nav-icon">📊</span> Analítica Docente</div>
+  
   <div class="nav-section">Recursos</div>
   <div class="nav-item" id="nav-glossary" onclick="navTo('view-glossary',this)"><span class="nav-icon">📖</span> Glosario Técnico</div>
   <div class="nav-item" id="nav-challenge" onclick="navTo('view-challenge',this)"><span class="nav-icon">🎯</span> Desafío del Día</div>
+  
   <div class="sidebar-footer">
     <p><strong>Modo Anónimo</strong><span class="status-dot"></span>ID: CF-2026X · Sesión activa</p>
   </div>
+
 </div>
 
 <!-- MAIN -->
@@ -57,17 +60,25 @@
 
 <!-- MAP VIEW -->
 <div id="view-map" class="view-container active">
+
   <div class="header-stats">
     <div class="stat-badge">🔥 Racha: <span class="badge-val" id="streak-val">0</span></div>
     <div class="stat-badge">⭐ <span class="badge-val" id="total-xp">0</span> XP</div>
   </div>
+
   <div class="page-title">Rutas de <span>Aprendizaje</span></div>
   <div class="page-sub">Completa cada módulo y demuestra tu dominio en el Boss Fight final</div>
   <p class="section-label" id="map-section-label">6 módulos · 30 niveles · 6 Boss Fights</p>
-  <div id="modules-list"></div>
+
+  <div id="modules-list">
+  <!-- DENTRO DE ESTE MODULO ESTAN EN LA SECCION "script" DE LOS 6 MODUDLOS DE LAS RUTAS DE APRENDIZAJE
+   CTRL + F modules-list
+  -->
+  </div>
+
 </div>
 
-<!-- EXERCISE VIEW -->
+<!-- ESCTRUCTURA DE CADA EJERCICIO DE TODOS LOS MODULOS-->
 <div id="view-exercise" class="view-container">
   <div class="exercise-top">
     <button class="btn-close" id="ex-close-btn" onclick="exitExercise()">✕</button>
@@ -77,7 +88,7 @@
       <div class="boss-timer" id="boss-timer">60</div>
     </div>
   </div>
-  <!-- Boss intro shown before questions -->
+  <!-- ESTRUCTRUA DEL CONTENDOR DE LOS JEFES FINALES DE CADA MODULO-->
   <div id="boss-intro-container"></div>
   <div id="exercise-question-wrap">
     <div class="question-container" id="question-container">
@@ -263,6 +274,8 @@
 <div id="toast"></div>
 
 <script>
+
+
 /* ════ CANVAS ════ */
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
