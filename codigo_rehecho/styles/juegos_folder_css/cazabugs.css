@@ -1,0 +1,107 @@
+/* ══════════════════════════════════════════════════════════
+   CAZA-BUGS — CSS específico de este minijuego
+   Requiere que index.css, hub_aprendizaje.css y juegos.css ya
+   estén cargados (reutiliza .hub-zone, .hub-blob, .hub-header,
+   .hub-btn, .hub-back-btn, etc.).
+   ══════════════════════════════════════════════════════════ */
+
+.bug-round-badge{
+   text-align:center;
+   font-size:11px;
+   font-weight:700;
+   letter-spacing:.5px;
+   color:#C08A52;
+   margin-bottom:6px;
+   position:relative;
+   z-index:2;
+}
+[data-theme="dark"] .bug-round-badge{
+   color:#E3B27B;
+}
+
+/* — Bloque de código de la ronda actual — */
+.bug-code{
+   max-width:480px;
+   margin:14px auto 0;
+   background:#241F30;
+   border-radius:18px;
+   padding:16px 6px;
+   box-shadow:0 12px 30px rgba(0,0,0,.22);
+   position:relative;
+   z-index:2;
+   font-family:ui-monospace,'SF Mono','Cascadia Code','Consolas','Courier New',monospace;
+}
+
+/* — Línea de código: es un <button> real (antes <div onclick>),
+     mismo reset de estilos nativos que el resto del proyecto — */
+.bug-line{
+   display:flex;
+   align-items:flex-start;
+   gap:12px;
+   width:100%;
+   padding:9px 16px;
+   margin:2px 0;
+   border-radius:10px;
+   border:none;
+   background:none;
+   font:inherit;
+   text-align:left;
+   cursor:pointer;
+   transition:all .2s;
+   color:#E3D9F0;
+   font-size:12px;
+   line-height:1.65;
+}
+.bug-line:hover:not(:disabled){
+   background:rgba(255,255,255,.07);
+}
+.bug-line:focus-visible{
+   outline:2px solid #F97316;
+   outline-offset:-2px;
+}
+.bug-line:disabled{
+   cursor:default;
+}
+.bug-line-num{
+   color:#786F98;
+   flex-shrink:0;
+   width:16px;
+   text-align:right;
+   user-select:none;
+}
+.bug-line.correct-line{
+   background:rgba(95,203,138,.24);
+}
+.bug-line.wrong-line{
+   background:rgba(228,104,93,.24);
+}
+
+/* — Mensaje de retroalimentación tras elegir una línea — */
+.bug-feedback{
+   text-align:center;
+   margin:16px auto 0;
+   font-weight:700;
+   font-size:12.5px;
+   line-height:1.6;
+   min-height:20px;
+   position:relative;
+   z-index:2;
+   color:#7C6B58;
+   max-width:460px;
+}
+[data-theme="dark"] .bug-feedback{
+   color:#C9BBA5;
+}
+
+/* — Pantalla final (resumen de la partida) — */
+.bug-final{
+   text-align:center;
+   padding:22px 10px;
+   color:#fff;
+}
+.bug-final-score{
+   font-family:var(--font-display);
+   font-weight:900;
+   font-size:18px;
+   margin-bottom:16px;
+}

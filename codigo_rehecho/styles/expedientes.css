@@ -1,0 +1,117 @@
+/* ══════════════════════════════════════════════════════════
+   EXPEDIENTES — CSS específico de esta sección
+   Requiere que index.css ya esté cargado (usa sus variables y
+   sus clases utilitarias: .page-title, .page-sub, .section-label).
+   ══════════════════════════════════════════════════════════ */
+
+.dossier-grid{
+   display:grid;
+   grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+   gap:14px;
+}
+
+/* — Ficha de personaje: es un <button> real (antes <div onclick>),
+     mismo reset de estilos nativos que el resto del proyecto — */
+.dossier-card{
+   width:100%;
+   background:var(--surface);
+   border:1px solid var(--border);
+   border-radius:18px;
+   padding:20px;
+   font:inherit;
+   text-align:center;
+   transition:all .25s cubic-bezier(.22,1,.36,1);
+   position:relative;
+   overflow:hidden;
+   cursor:pointer;
+   color:var(--text);
+}
+.dossier-card:hover{
+   transform:translateY(-3px);
+   border-color:color-mix(in srgb,var(--dc-color,#4F8EF7) 40%,transparent);
+   box-shadow:0 10px 30px color-mix(in srgb,var(--dc-color,#4F8EF7) 18%,transparent);
+}
+.dossier-card:focus-visible{
+   outline:2px solid var(--dc-color,#4F8EF7);
+   outline-offset:2px;
+}
+.dossier-card::before{
+   content:'';
+   position:absolute;
+   top:0;
+   left:0;
+   right:0;
+   height:3px;
+   background:var(--dc-color,#4F8EF7);
+}
+.dossier-portrait{
+   width:56px;
+   height:56px;
+   border-radius:16px;
+   background:color-mix(in srgb,var(--dc-color,#4F8EF7) 14%,var(--surface));
+   border:1px solid color-mix(in srgb,var(--dc-color,#4F8EF7) 30%,transparent);
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   font-size:28px;
+   margin: 0 auto 12px auto;
+   animation:candidateFloat 4s ease-in-out infinite;
+}
+@keyframes candidateFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-2px);}
+}
+/* — Las fichas de Centinela (villanos) tienen un retrato "glitcheado" — */
+.dossier-villain .dossier-portrait{
+   animation:glitchFloat 2.4s ease-in-out infinite;
+}
+@keyframes glitchFloat{
+  0%,100%{transform:translate(0,0);}
+  20%{transform:translate(-1px,1px);}
+  40%{transform:translate(1px,-1px);}
+  60%{transform:translate(-1px,-1px);}
+  80%{transform:translate(1px,1px);}
+}
+.dossier-name{
+   font-family:var(--font-display);
+   font-size:15px;
+   font-weight:800;
+   color:var(--text);
+}
+.dossier-alias{
+   font-weight:400;
+   color:var(--muted);
+   font-size:11px;
+}
+.dossier-role{
+   font-size:10.5px;
+   font-weight:700;
+   color:var(--dc-color,#4F8EF7);
+   text-transform:uppercase;
+   letter-spacing:.5px;
+   margin-bottom:8px;
+}
+.dossier-desc{
+   font-size:11.5px;
+   color:var(--muted);
+   line-height:1.6;
+   margin-bottom:8px;
+}
+.dossier-tag{
+   display:inline-block;
+   font-size:9px;
+   background:color-mix(in srgb,var(--dc-color,#4F8EF7) 10%,transparent);
+   color:var(--dc-color,#4F8EF7);
+   padding:2px 8px;
+   border-radius:100px;
+   margin:2px 3px 0 0;
+   font-weight:600;
+}
+.dossier-artnote{
+   margin-top:10px;
+   font-size:9.5px;
+   color:var(--muted2);
+   font-style:italic;
+   border-top:1px dashed var(--border);
+   padding-top:8px;
+}

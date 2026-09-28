@@ -1,0 +1,255 @@
+/* ══════════════════════════════════════════════════════════
+   DESAFÍO DEL DÍA — CSS específico de esta sección
+   Requiere que index.css ya esté cargado (usa sus variables y
+   sus clases utilitarias: .page-title, .page-sub).
+   ══════════════════════════════════════════════════════════ */
+
+.challenge-hero{
+   background:var(--surface);
+   border:1px solid var(--border);
+   border-radius:18px;
+   padding:26px;
+   margin-bottom:16px;
+   position:relative;
+   overflow:hidden;
+}
+.challenge-hero::before{
+   content:'';
+   position:absolute;
+   inset:0;
+   background:radial-gradient(ellipse at 80% 20%,rgba(251,191,36,.06),transparent 60%);
+   pointer-events:none;
+}
+[data-theme="light"] .challenge-hero{
+   box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.challenge-badge{
+   display:inline-flex;
+   align-items:center;
+   gap:6px;
+   background:rgba(251,191,36,.08);
+   border:1px solid rgba(251,191,36,.18);
+   color:var(--yellow);
+   padding:5px 12px;
+   border-radius:100px;
+   font-size:10px;
+   font-weight:700;
+   letter-spacing:.5px;
+   text-transform:uppercase;
+   margin-bottom:13px;
+}
+.challenge-title{
+   font-family:var(--font-display);
+   font-size:21px;
+   font-weight:900;
+   color:var(--text);
+   letter-spacing:-.4px;
+   margin-bottom:6px;
+}
+.challenge-desc{
+   font-size:13px;
+   color:var(--muted);
+   line-height:1.65;
+   margin-bottom:16px;
+}
+.challenge-meta{
+   display:flex;
+   gap:8px;
+   flex-wrap:wrap;
+}
+.challenge-tag{
+   display:flex;
+   align-items:center;
+   gap:5px;
+   padding:4px 11px;
+   background:var(--surface2);
+   border:1px solid var(--border);
+   border-radius:100px;
+   font-size:11px;
+   font-weight:600;
+   color:var(--muted);
+}
+
+/* — Pregunta del día — */
+.challenge-q-wrap{
+   background:var(--surface2);
+   border:1px solid var(--border);
+   border-radius:13px;
+   padding:20px;
+   margin-bottom:13px;
+}
+.challenge-q{
+   font-family:var(--font-display);
+   font-size:14.5px;
+   font-weight:700;
+   color:var(--text);
+   line-height:1.6;
+   margin-bottom:16px;
+   white-space:pre-line;
+}
+.challenge-opts{
+   display:flex;
+   flex-direction:column;
+   gap:7px;
+}
+/* — Alternativa: es un <button> real (antes <div onclick>), mismo
+     reset de estilos nativos que el resto del proyecto — */
+.challenge-opt{
+   width:100%;
+   background:var(--surface);
+   border:1px solid var(--border);
+   border-radius:10px;
+   padding:12px 15px;
+   font:inherit;
+   text-align:left;
+   font-size:13px;
+   font-weight:500;
+   color:var(--text);
+   cursor:pointer;
+   transition:all .2s;
+   display:flex;
+   align-items:center;
+   gap:10px;
+}
+.challenge-opt:hover:not(:disabled){
+   border-color:rgba(251,191,36,.28);
+   transform:translateX(3px);
+}
+.challenge-opt:focus-visible{
+   outline:2px solid var(--yellow);
+   outline-offset:2px;
+}
+.challenge-opt:disabled{
+   cursor:default;
+}
+.challenge-opt.selected{
+   border-color:rgba(251,191,36,.35);
+   background:rgba(251,191,36,.04);
+}
+.challenge-opt.correct-anim{
+   border-color:rgba(34,197,94,.4)!important;
+   background:rgba(34,197,94,.06)!important;
+   animation:challengeCorrectFlash .45s ease;
+}
+.challenge-opt.wrong-anim{
+   animation:challengeWrongShake .38s ease;
+}
+@keyframes challengeCorrectFlash{
+  0%{transform:scale(1);}
+  30%{transform:scale(1.012);}
+  100%{transform:scale(1);}
+}
+@keyframes challengeWrongShake{
+  0%,100%{transform:translateX(3px);}
+  25%{transform:translateX(-4px);}
+  75%{transform:translateX(-2px);}
+  50%{transform:translateX(3px);}
+}
+.challenge-opt-radio{
+   width:16px;
+   height:16px;
+   border-radius:50%;
+   border:2px solid var(--muted2);
+   flex-shrink:0;
+   transition:all .2s;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+}
+.challenge-opt.selected .challenge-opt-radio{
+   border-color:var(--yellow);
+   background:var(--yellow);
+}
+.challenge-opt.selected .challenge-opt-radio::after{
+   content:'';
+   width:5px;
+   height:5px;
+   border-radius:50%;
+   background:#000;
+}
+
+/* — Botón "Comprobar" — */
+.btn-challenge{
+   padding:11px 24px;
+   background:linear-gradient(135deg,var(--yellow),var(--orange));
+   color:#000;
+   border:none;
+   border-radius:10px;
+   font-size:13px;
+   font-weight:800;
+   font-family:var(--font-main);
+   cursor:pointer;
+   transition:all .2s;
+   box-shadow:0 4px 14px rgba(251,191,36,.25);
+}
+.btn-challenge:hover:not(:disabled){
+   transform:translateY(-2px);
+   box-shadow:0 8px 22px rgba(251,191,36,.35);
+}
+.btn-challenge:disabled{
+   opacity:.3;
+   cursor:not-allowed;
+   transform:none;
+}
+.btn-challenge:focus-visible{
+   outline:2px solid var(--yellow);
+   outline-offset:2px;
+}
+.challenge-retry-btn{
+   margin-top:12px;
+}
+
+/* — Resultado (correcto / incorrecto) — */
+.challenge-result{
+   background:var(--surface2);
+   border:1px solid var(--border);
+   border-radius:12px;
+   padding:16px;
+   margin-top:13px;
+   display:none;
+}
+.challenge-result.show{
+   display:block;
+   animation:fadeUp .3s ease;
+}
+.challenge-result-title{
+   font-family:var(--font-display);
+   font-size:15px;
+   font-weight:800;
+   margin-bottom:5px;
+}
+.challenge-result.ok .challenge-result-title{
+   color:#4ADE80;
+}
+.challenge-result.err .challenge-result-title{
+   color:#F87171;
+}
+.challenge-result-text{
+   font-size:12px;
+   color:var(--muted);
+   line-height:1.65;
+}
+
+/* — Pantalla de "ya completado hoy" — */
+.challenge-done{
+   background:var(--surface);
+   border:1px solid rgba(34,197,94,.2);
+   border-radius:16px;
+   padding:28px;
+   text-align:center;
+}
+.challenge-done-icon{
+   font-size:52px;
+   margin-bottom:12px;
+}
+.challenge-done h3{
+   font-family:var(--font-display);
+   font-size:18px;
+   font-weight:800;
+   color:#4ADE80;
+   margin-bottom:6px;
+}
+.challenge-done p{
+   font-size:12.5px;
+   color:var(--muted);
+}

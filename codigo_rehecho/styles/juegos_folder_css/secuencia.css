@@ -1,0 +1,113 @@
+/* ══════════════════════════════════════════════════════════
+   ORDENA LA LÓGICA — CSS específico de este minijuego
+   Requiere que index.css, hub_aprendizaje.css y juegos.css ya
+   estén cargados (reutiliza .hub-zone, .hub-blob, .hub-header,
+   .hub-btn, .hub-back-btn, etc.).
+   ══════════════════════════════════════════════════════════ */
+
+/* — Espacios objetivo (donde se van acomodando los pasos elegidos) — */
+.seq-target{
+   display:flex;
+   flex-direction:column;
+   gap:9px;
+   max-width:440px;
+   margin:20px auto 0;
+   position:relative;
+   z-index:2;
+}
+.seq-slot{
+   min-height:48px;
+   border-radius:14px;
+   border:2px dashed rgba(120,90,60,.25);
+   background:rgba(255,255,255,.4);
+   display:flex;
+   align-items:center;
+   padding:0 14px;
+   font-size:12.5px;
+   font-weight:600;
+   color:#4A3B2F;
+   transition:all .3s cubic-bezier(.22,1,.36,1);
+}
+[data-theme="dark"] .seq-slot{
+   border-color:rgba(255,255,255,.14);
+   background:rgba(255,255,255,.03);
+   color:#F3E7DA;
+}
+.seq-slot.filled{
+   border-style:solid;
+   border-color:#8B7CD8;
+   background:rgba(139,124,216,.14);
+   animation:fadeUp .3s cubic-bezier(.22,1,.36,1) both;
+}
+.seq-slot-num{
+   width:24px;
+   height:24px;
+   border-radius:50%;
+   background:#8B7CD8;
+   color:#fff;
+   font-size:10.5px;
+   font-weight:800;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   margin-right:12px;
+   flex-shrink:0;
+}
+
+/* — Grupo de fichas disponibles para elegir — */
+.seq-pool{
+   display:flex;
+   flex-wrap:wrap;
+   gap:10px;
+   justify-content:center;
+   max-width:480px;
+   margin:22px auto 0;
+   position:relative;
+   z-index:2;
+}
+/* — Ficha: es un <button> real (antes <div onclick>), mismo reset
+     de estilos nativos que el resto del proyecto. Las fichas ya
+     usadas se marcan con :disabled real. — */
+.seq-chip{
+   padding:12px 17px;
+   border-radius:14px;
+   background:rgba(255,255,255,.62);
+   border:2px solid transparent;
+   font:inherit;
+   font-size:12px;
+   font-weight:700;
+   color:#4A3B2F;
+   cursor:pointer;
+   transition:all .22s cubic-bezier(.22,1,.36,1);
+   box-shadow:0 4px 12px rgba(0,0,0,.07);
+}
+[data-theme="dark"] .seq-chip{
+   background:rgba(255,255,255,.05);
+   color:#F3E7DA;
+}
+.seq-chip:hover:not(:disabled){
+   transform:translateY(-3px);
+   border-color:#8B7CD8;
+   box-shadow:0 8px 18px rgba(139,124,216,.25);
+}
+.seq-chip:focus-visible{
+   outline:2px solid #8B7CD8;
+   outline-offset:2px;
+}
+.seq-chip:disabled{
+   opacity:.22;
+   cursor:default;
+   transform:none;
+   box-shadow:none;
+}
+
+/* — Mensaje de retroalimentación tras completar una ronda — */
+.seq-feedback{
+   text-align:center;
+   margin-top:18px;
+   font-weight:700;
+   font-size:13px;
+   min-height:20px;
+   position:relative;
+   z-index:2;
+}

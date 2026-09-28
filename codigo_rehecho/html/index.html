@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODE FLOW — Cacería de Lógicos</title>
+<link rel="stylesheet" href="/codigo_rehecho/styles/index.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/lacaceria.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/expedientes.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/glosario.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/desafio_diario.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/analitica_docente.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/hub_aprendizaje.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/juegos.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/juegos_folder_css/cazabugs.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/juegos_folder_css/memorama.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/juegos_folder_css/secuencia.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/juegos_folder_css/carrera.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ════════════════════════════════════════════════════════
+     1. TOPBAR — botón de cambio de tema (esquina superior derecha)
+     ════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-actions">
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Cambiar tema"><span class="material-icons">dark_mode</span></button>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     2. SIDEBAR — menú lateral (marca, navegación, nivel y XP)
+     ════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-glow"></div>
+  <div class="brand"><div class="brand-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">track_changes</span></div>CODE<span>FLOW</span></div>
+
+  <div class="level-badge" id="level-badge">
+    <div id="level-icon" style="font-size:18px"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">eco</span></div>
+    <div>
+      <div class="level-badge-name" id="level-name">Aprendiz</div>
+      <div class="level-badge-sub" id="level-sub">Nivel 1 · 0 XP</div>
+    </div>
+  </div>
+  <div class="xp-sidebar-wrap">
+    <div class="xp-sidebar-label"><span>Progreso</span><span id="xp-label-val">0 / 100 XP</span></div>
+    <div class="xp-sidebar-bar"><div class="xp-sidebar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+  </div>
+  <div class="cosmetic-hint" id="cosmetic-hint">
+    <strong id="next-unlock-label"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">lock_open</span> Próximo: Nivel 2</strong>
+    <span id="next-unlock-desc">Alcanza 100 XP para desbloquear el tema Galaxia</span>
+  </div>
+
+  <div style="height:6px"></div>
+
+  <nav aria-label="Navegación principal">
+    <p class="nav-section">Comienza aquí</p>
+    <button type="button" class="nav-item active" data-label="Hub de Aprendizaje" data-view="view-hub-quiz" onclick="navTo(this)" aria-current="page"><span class="material-icons nav-icon">school</span> Hub de Aprendizaje</button>
+    <button type="button" class="nav-item" data-label="Explorar Juegos" data-view="view-hub-games" onclick="navTo(this)"><span class="material-icons nav-icon">sports_esports</span> Explorar Juegos</button>
+
+    <p class="nav-section">Plataforma</p>
+    <button type="button" class="nav-item" data-label="La Cacería" data-view="view-map" onclick="navTo(this)"><span class="material-icons nav-icon">map</span> La Cacería</button>
+    <button type="button" class="nav-item" data-label="Expedientes" data-view="view-dossier" onclick="navTo(this)"><span class="material-icons nav-icon">folder_shared</span> Expedientes</button>
+    <button type="button" class="nav-item" data-label="Analítica Docente" data-view="view-analytics" onclick="navTo(this)"><span class="material-icons nav-icon">analytics</span> Analítica Docente</button>
+
+    <p class="nav-section">Recursos</p>
+    <button type="button" class="nav-item" data-label="Glosario Técnico" data-view="view-glossary" onclick="navTo(this)"><span class="material-icons nav-icon">menu_book</span> Glosario Técnico</button>
+    <button type="button" class="nav-item" data-label="Desafío del Día" data-view="view-challenge" onclick="navTo(this)"><span class="material-icons nav-icon">emoji_events</span> Desafío del Día</button>
+  </nav>
+
+  <footer class="sidebar-footer">
+    <p><strong>Modo Anónimo</strong><span class="status-dot"></span>ID: ND-2026X · Sesión activa</p>
+  </footer>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════
+     3. MAIN — placeholder de contenido (aquí irían las vistas reales)
+     ════════════════════════════════════════════════════════ -->
+<main class="main-content">
+  <!-- VISTA: HUB — QUIZ de estilo de aprendizaje -->
+  <section id="view-hub-quiz" class="view-container active" data-onshow="openHub">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <p class="hub-eyebrow">Hub de Aprendizaje · NODO</p>
+        <h1 class="hub-title">¿Cómo te gusta <span style="color:#F2A65A">aprender</span>?</h1>
+        <p class="hub-sub">Responde estas preguntas con calma y descubriremos qué modo de juego se adapta mejor a tu forma de pensar. No hay respuestas correctas o incorrectas — solo tú. <span class="material-icons" style="font-size: 1em; vertical-align: middle;">local_florist</span></p>
+      </div>
+      <div class="hub-steps" id="hub-steps"></div>
+      <p class="hub-progress-text" id="hub-progress-text">Pregunta 1 de 5</p>
+      <div class="hub-q-card">
+        <p class="hub-q-text" id="hub-q-text">—</p>
+        <div id="hub-opts"></div>
+        <div class="hub-btn-row">
+          <button type="button" class="hub-btn" id="hub-next-btn" onclick="hubNext()" disabled>Siguiente →</button>
+        </div>
+      </div>
+      <div class="hub-quiz-footer">
+        <button type="button" class="hub-link-btn" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">Prefiero elegir yo mismo → ver todas las áreas</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA: HUB — RESULTADO del quiz (perfil de aprendizaje) -->
+  <section id="view-hub-result" class="view-container">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div id="hub-res-card" class="hub-res-card">
+        <div class="hub-companion" id="hub-res-icon" aria-hidden="true"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">emoji_objects</span></div>
+        <p class="hub-eyebrow">Tu perfil de aprendizaje es…</p>
+        <h1 class="hub-result-type" id="hub-res-name">Mente Lógica</h1>
+        <p class="hub-result-desc" id="hub-res-desc">—</p>
+        <div class="hub-bars" id="hub-bars"></div>
+        <div class="hub-btn-row hub-btn-row-wrap">
+          <button type="button" class="hub-btn" id="hub-res-cta">Comenzar</button>
+          <button type="button" class="hub-btn ghost" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">Ver todas las áreas</button>
+        </div>
+        <div class="hub-result-footer">
+          <button type="button" class="hub-link-btn" onclick="goHubQuiz()"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">replay</span> Repetir el cuestionario</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA: HUB — selección de mini-juegos (Explorar Juegos) -->
+  <section id="view-hub-games" class="view-container" data-onshow="renderHubGames">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <p class="hub-eyebrow">Hub de Juegos · en expansión <span class="material-icons" style="font-size: 1em; vertical-align: middle;">eco</span></p>
+        <h1 class="hub-title">Elige tu <span style="color:#F2A65A">aventura</span></h1>
+        <p class="hub-sub">NODO se está transformando en un hub de mini-juegos educativos. Estas son las áreas disponibles hoy — pronto habrá más.</p>
+      </div>
+      <div class="hub-refnote">
+        <div class="hub-refnote-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">build</span></div>
+        <p class="hub-refnote-text"><strong>Importante:</strong> los juegos de este hub son versiones de referencia para mostrar la idea y probar la mecánica. Las versiones finales serán aplicaciones independientes — pensadas como un juego de celular de verdad, con más niveles, mejores gráficas y logros propios.</p>
+      </div>
+      <div class="hub-games-grid" id="hub-games-grid">
+        <button type="button" class="hub-game-card" data-target="view-map" style="--card-accent:#8B7CD8" onclick="launchGame('view-map')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">person_search</span></div>
+          <div class="hub-game-title">La Cacería de los Lógicos</div>
+          <div class="hub-game-desc">El recorrido principal: 6 Nodos, 6 candidatos y sus Centinelas de lógica y programación.</div>
+          <span class="hub-game-tag">Modo clásico</span>
+        </button>
+        <button type="button" class="hub-game-card" data-target="view-game-memory" style="--card-accent:#6FBF9B" onclick="launchGame('view-game-memory')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">psychology</span></div>
+          <div class="hub-game-title">Memorama Lógico</div>
+          <div class="hub-game-desc">Encuentra los pares de conceptos de programación. Ideal si aprendes reconociendo patrones.</div>
+          <span class="hub-game-tag">Nuevo</span>
+        </button>
+        <button type="button" class="hub-game-card" data-target="view-game-racer" style="--card-accent:#F0876B" onclick="launchGame('view-game-racer')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">directions_car</span></div>
+          <div class="hub-game-title">Carrera de Código</div>
+          <div class="hub-game-desc">Elige la puerta con la respuesta correcta y acelera. Ideal si aprendes con reflejos y acción.</div>
+          <span class="hub-game-tag">Nuevo</span>
+        </button>
+        <button type="button" class="hub-game-card" data-target="view-game-sequence" style="--card-accent:#8B7CD8" onclick="launchGame('view-game-sequence')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">explore</span></div>
+          <div class="hub-game-title">Ordena la Lógica</div>
+          <div class="hub-game-desc">Reordena los pasos de un algoritmo cotidiano en su secuencia correcta. Ideal si piensas paso a paso.</div>
+          <span class="hub-game-tag">Nuevo</span>
+        </button>
+        <button type="button" class="hub-game-card" data-target="view-game-bughunt" style="--card-accent:#F97316" onclick="launchGame('view-game-bughunt')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">bug_report</span></div>
+          <div class="hub-game-title">Caza-Bugs</div>
+          <div class="hub-game-desc">Encuentra la línea con el error en cada fragmento de código. Ideal si te fijas en los detalles.</div>
+          <span class="hub-game-tag">Nuevo</span>
+        </button>
+        <button type="button" class="hub-game-card muted" aria-disabled="true" style="--card-accent:#B0B2CC" onclick="showToast('<span class=&quot;material-icons&quot; style=&quot;font-size: 1em; vertical-align: middle;&quot;>build</span> Nuevas áreas del hub llegarán pronto')">
+          <div class="hub-game-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">auto_awesome</span></div>
+          <div class="hub-game-title">Más juegos</div>
+          <div class="hub-game-desc">Seguimos construyendo nuevas formas de aprender programación jugando.</div>
+          <span class="hub-game-tag">Próximamente</span>
+        </button>
+      </div>
+      <div class="hub-result-footer">
+        <button type="button" class="hub-link-btn" onclick="goHubQuiz()"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">replay</span> Repetir el cuestionario de estilo de aprendizaje</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view-container" id="view-placeholder">
+    <h1 class="page-title">Sección: <span id="view-label">Hub de Aprendizaje</span></h1>
+    <p class="page-sub">Este es un placeholder — reemplaza este bloque por el contenido real de cada sección.</p>
+  </section>
+
+  <!-- VISTA: EXPEDIENTES — fichas de personajes del elenco -->
+  <section id="view-dossier" class="view-container" data-onshow="buildDossier">
+    <h1 class="page-title">Expedientes del <span>Gremio</span></h1>
+    <p class="page-sub">Cada Cazatalentos guarda una ficha de campo por candidato. Toca una para conocer su historia.</p>
+    <p class="section-label">1 mentor · 5 candidatos · 6 Centinelas</p>
+    <div class="dossier-grid" id="dossier-grid"></div>
+  </section>
+
+  <!-- VISTA: ANALÍTICA DOCENTE -->
+  <section id="view-analytics" class="view-container" data-onshow="refreshAnalytics">
+    <div class="analytics-header">
+      <div>
+        <h1 class="analytics-title">Analítica Docente</h1>
+        <p class="analytics-sub">Datos agregados · Anonimato total</p>
+      </div>
+      <div class="analytics-actions">
+        <div class="section-selector">
+          <label for="section-select">Sección</label>
+          <select class="section-select" id="section-select" onchange="refreshAnalytics()">
+            <option value="all">Todas</option>
+            <option value="A">Sección A</option>
+            <option value="B">Sección B</option>
+            <option value="C">Sección C</option>
+            <option value="D">Sección D</option>
+          </select>
+        </div>
+        <button type="button" class="btn-export" onclick="showExportInfo()"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">file_download</span> Exportar Dataset</button>
+      </div>
+    </div>
+
+    <!-- Panel de exportación (CSV) -->
+    <div id="export-panel" class="export-hint">
+      <div class="export-hint-icon" aria-hidden="true"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">cell_tower</span></div>
+      <div>
+        <p class="export-hint-title">Exportación de Dataset para Power BI / Tableau</p>
+        <p class="export-hint-desc">Este módulo genera un archivo <strong>.csv</strong> estructurado con datos anonimizados por sesión, listos para conectarse a herramientas de BI. También disponible como endpoint REST para dashboards en tiempo real. <strong>Los datos exportados son siempre anónimos y conformes con Ley N°19.628.</strong></p>
+        <code class="export-schema">session_id, module_id, module_name, level_idx, question_concept, is_correct, attempt_num, timestamp_iso, xp_earned, error_count</code>
+        <div class="export-btn-row">
+          <button type="button" class="export-btn export-btn-csv" onclick="downloadCSV()"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">download</span> Descargar .csv</button>
+          <button type="button" class="export-btn export-btn-api" onclick="showToast('<span class=&quot;material-icons&quot; style=&quot;font-size: 1em; vertical-align: middle;&quot;>power</span> Endpoint API: próximamente disponible en docs.nodo.gg/api',3000)"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">cell_tower</span> Copiar API Endpoint</button>
+          <button type="button" class="export-btn export-btn-close" onclick="document.getElementById('export-panel').classList.remove('show')"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">close</span> Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-notice">
+      <div class="privacy-icon" aria-hidden="true"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">lock</span></div>
+      <div>
+        <p class="privacy-title">Datos anónimos y agregados · Contexto educacional</p>
+        <p class="privacy-desc">NODO opera bajo <strong>anonimato total</strong>: los IDs de sesión (ND-XXXXXX) son temporales y descartables, conformes con la Ley N°19.628 y principios FERPA. Los docentes acceden únicamente a <strong>estadísticas por sección</strong>, nunca a perfiles individuales.</p>
+      </div>
+    </div>
+
+    <div class="a-grid">
+      <div class="a-card"><div class="a-label">Precisión global</div><div class="a-value" id="a-acc">—</div><div class="a-sub">1er intento correcto</div></div>
+      <div class="a-card"><div class="a-label">Sesiones estimadas</div><div class="a-value" id="a-sessions">0</div><div class="a-sub">esta semana</div></div>
+      <div class="a-card"><div class="a-label">Niveles completados</div><div class="a-value" id="a-lvls">0</div><div class="a-sub">de 36 totales</div></div>
+      <div class="a-card"><div class="a-label">Total intentos</div><div class="a-value" id="a-att">0</div><div class="a-sub">respuestas emitidas</div></div>
+      <div class="a-card"><div class="a-label">Errores</div><div class="a-value" id="a-err" style="color:var(--red)">0</div><div class="a-sub">requieren refuerzo</div></div>
+      <div class="a-card"><div class="a-label">Racha máxima</div><div class="a-value"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">local_fire_department</span> <span id="a-str">0</span></div><div class="a-sub">aciertos seguidos</div></div>
+    </div>
+
+    <div class="chart-row chart-row-wide-narrow">
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Preguntas con mayor tasa de error</h2>
+        <p class="chart-sub">% de respuestas incorrectas · identifica conceptos a reforzar</p>
+        <div class="bar-chart" id="error-bar-chart">
+          <p class="chart-empty">Completa ejercicios para ver el análisis</p>
+        </div>
+      </div>
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Distribución de resultados</h2>
+        <p class="chart-sub">Total respuestas emitidas</p>
+        <div class="donut-wrap" id="donut-wrap">
+          <p class="chart-empty">Sin datos aún</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-row chart-row-even">
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Evolución de precisión</h2>
+        <p class="chart-sub">Últimas 10 respuestas</p>
+        <div class="precision-timeline-wrap" id="precision-timeline">
+          <p class="chart-empty">Sin datos aún</p>
+        </div>
+      </div>
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Progreso por módulo</h2>
+        <p class="chart-sub">Niveles completados vs total</p>
+        <div class="module-prog-wrap" id="module-prog-chart">
+          <p class="chart-empty">Sin datos aún</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-row chart-row-wide-narrow">
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Mapa de calor de errores por módulo</h2>
+        <p class="chart-sub">Cada bloque = 1 pregunta. Intensidad del color = errores registrados</p>
+        <div class="error-heatmap" id="error-heatmap">
+          <p class="chart-empty">Completa ejercicios para generar el mapa</p>
+        </div>
+      </div>
+
+      <div class="chart-card chart-card-flush">
+        <h2 class="chart-title">Boss Fights superados</h2>
+        <p class="chart-sub">Evaluaciones integradoras completadas</p>
+        <div class="boss-analytics-wrap" id="boss-analytics">
+          <p class="chart-empty">Sin Boss Fights completados aún</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="chart-title">Radar de competencias</h2>
+      <p class="chart-sub">Rendimiento relativo por área</p>
+      <div class="radar-chart-wrap" id="radar-wrap">
+        <p class="chart-empty">Sin datos aún</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="chart-title mod-table-title">Detalle por módulo</h2>
+      <table class="mod-table">
+        <thead>
+          <tr>
+            <th scope="col">Módulo</th>
+            <th scope="col">Niveles</th>
+            <th scope="col" class="mod-table-progress-col">Progreso</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="mod-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="chart-title log-title">Historial de respuestas</h2>
+      <div class="log-wrap" id="attempt-log">
+        <p class="chart-empty">Sin actividad · Completa un ejercicio</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA: GLOSARIO TÉCNICO -->
+  <section id="view-glossary" class="view-container" data-onshow="buildGlossary">
+    <h1 class="page-title">Glosario <span>Técnico</span></h1>
+    <p class="page-sub">Conceptos clave de lógica, programación y orientación a objetos</p>
+    <div class="glossary-search-wrap">
+      <span class="glossary-search-icon" aria-hidden="true"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">search</span></span>
+      <input type="text" class="glossary-search" id="glossary-input" placeholder="Buscar término…" aria-label="Buscar término del glosario" oninput="filterGlossary(this.value)">
+    </div>
+    <div class="glossary-grid" id="glossary-grid"></div>
+  </section>
+
+  <!-- VISTA: DESAFÍO DEL DÍA -->
+  <section id="view-challenge" class="view-container" data-onshow="buildChallenge">
+    <h1 class="page-title">Desafío <span>del Día</span></h1>
+    <p class="page-sub">Un reto diario para mantener tu racha · +50 XP bonus</p>
+    <div id="challenge-content"></div>
+  </section>
+
+  <!-- 4.1 VISTA: MAPA — módulos, camino de niveles y banner de historia -->
+  <section id="view-map" class="view-container">
+    <div class="header-stats">
+      <div class="stat-badge"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">local_fire_department</span> Racha: <span class="badge-val" id="streak-val">0</span></div>
+      <div class="stat-badge"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">star</span> <span class="badge-val" id="total-xp">0</span> XP</div>
+    </div>
+    <h1 class="page-title">La Cacería de los <span>Lógicos</span></h1>
+    <p class="page-sub">Recorre los Nodos de la Red, certifica a cada candidato y enfrenta a su Centinela</p>
+    <p class="section-label" id="map-section-label">6 Nodos · 30 pruebas · 6 Centinelas</p>
+    <button type="button" class="story-banner" id="story-banner" onclick="openLore()">
+      <div class="story-banner-portrait"><span class="material-icons" style="font-size:inherit;">person_search</span></div>
+      <div class="story-banner-text">
+        <strong>Ren Kaster — Cazatalentos Senior</strong>
+        <span>"Tienes el expediente abierto. Toca un Nodo y vamos a ver de qué estás hecho." <em>Toca aquí para leer la historia completa →</em></span>
+      </div>
+    </button>
+    <div id="modules-list">
+      <!-- MÓDULO 1: SECUENCIAS — tarjeta estática. Los niveles (dentro de
+           #path-1) se construyen dinámicamente en el JS más adelante. -->
+      <div class="module-block" id="blk-1">
+        <div class="module-header theme-mod1" style="--accent:#4F8EF7;--glow:rgba(79,142,247,.22)">
+          <button type="button" class="module-toggle" onclick="toggleMod(1)" aria-expanded="false" aria-controls="levels-1">
+            <span class="material-icons" style="font-size:inherit;">extension</span>
+            <div class="mod-info">
+              <div class="mod-num">Nodo del Reloj</div>
+              <div class="mod-title">Secuencias</div>
+              <div class="mod-desc">La base de todo algoritmo: ordenar pasos, detectar errores y comprender la causalidad en procesos lineales.</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(1)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">extension</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Tick</span>
+              <span class="mod-candidate-role">Candidato/a</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-1">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#4F8EF7"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-1" style="color:#4F8EF7">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod1" id="levels-1" style="--accent:#4F8EF7;--glow:rgba(79,142,247,.22)">
+          <div class="levels-path" id="path-1" style="--accent:#4F8EF7;--glow:rgba(79,142,247,.22)"></div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 2: CONDICIONALES — tarjeta estática. Los niveles (dentro de
+           #path-2) se construyen dinámicamente en el JS. -->
+      <div class="module-block" id="blk-2">
+        <div class="module-header theme-mod2" style="--accent:#A855F7;--glow:rgba(168,85,247,.22)">
+          <button type="button" class="module-toggle" onclick="toggleMod(2)" aria-expanded="false" aria-controls="levels-2">
+            <span class="material-icons" style="font-size:inherit;">balance</span>
+            <div class="mod-info">
+              <div class="mod-num">Nodo del Espejo</div>
+              <div class="mod-title">Condicionales</div>
+              <div class="mod-desc">Decisiones, ramificaciones lógicas y la dualidad booleana de Verdadero/Falso que controla el flujo de todo programa.</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(2)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">balance</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Duala</span>
+              <span class="mod-candidate-role">Candidato/a</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-2">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#A855F7"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-2" style="color:#A855F7">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod2" id="levels-2" style="--accent:#A855F7;--glow:rgba(168,85,247,.22)">
+          <div class="levels-path" id="path-2" style="--accent:#A855F7;--glow:rgba(168,85,247,.22)"></div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 3: BUCLES -->
+      <div class="module-block" id="blk-3">
+        <div class="module-header theme-mod3" style="--accent:#F97316;--glow:rgba(249,115,22,.22)">
+          <button type="button" class="module-toggle" onclick="toggleMod(3)" aria-expanded="false" aria-controls="levels-3">
+            <span class="material-icons" style="font-size:inherit;">loop</span>
+            <div class="mod-info">
+              <div class="mod-num">Nodo del Laberinto</div>
+              <div class="mod-title">Bucles</div>
+              <div class="mod-desc">Repeticiones, patrones cíclicos y la magia de automatizar tareas que se repiten con una simple estructura iterativa.</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(3)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">loop</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Eco</span>
+              <span class="mod-candidate-role">Candidato/a</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-3">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#F97316"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-3" style="color:#F97316">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod3" id="levels-3" style="--accent:#F97316;--glow:rgba(249,115,22,.22)">
+          <div class="levels-path" id="path-3" style="--accent:#F97316;--glow:rgba(249,115,22,.22)"></div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 4: PROGRAMACIÓN -->
+      <div class="module-block" id="blk-4">
+        <div class="module-header theme-mod4" style="--accent:#10B981;--glow:rgba(16,185,129,.22)">
+          <button type="button" class="module-toggle" onclick="toggleMod(4)" aria-expanded="false" aria-controls="levels-4">
+            <span class="material-icons" style="font-size:inherit;">computer</span>
+            <div class="mod-info">
+              <div class="mod-num">Nodo del Taller</div>
+              <div class="mod-title">Programación</div>
+              <div class="mod-desc">Fundamentos de la programación estructurada: funciones, variables, tipos de datos y diseño de soluciones con pseudocódigo.</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(4)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">computer</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Forja</span>
+              <span class="mod-candidate-role">Candidato/a</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-4">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#10B981"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-4" style="color:#10B981">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod4" id="levels-4" style="--accent:#10B981;--glow:rgba(16,185,129,.22)">
+          <div class="levels-path" id="path-4" style="--accent:#10B981;--glow:rgba(16,185,129,.22)"></div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 5: ALGORITMOS -->
+      <div class="module-block" id="blk-5">
+        <div class="module-header theme-mod5" style="--accent:#6366F1;--glow:rgba(99,102,241,.22)">
+          <button type="button" class="module-toggle" onclick="toggleMod(5)" aria-expanded="false" aria-controls="levels-5">
+            <span class="material-icons" style="font-size:inherit;">psychology</span>
+            <div class="mod-info">
+              <div class="mod-num">Nodo de la Biblioteca</div>
+              <div class="mod-title">Algoritmos</div>
+              <div class="mod-desc">Estrategias clásicas de resolución de problemas: búsqueda, ordenamiento, divide y vencerás, y optimización eficiente.</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(5)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">psychology</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Aria</span>
+              <span class="mod-candidate-role">Candidato/a</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-5">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#6366F1"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-5" style="color:#6366F1">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod5" id="levels-5" style="--accent:#6366F1;--glow:rgba(99,102,241,.22)">
+          <div class="levels-path" id="path-5" style="--accent:#6366F1;--glow:rgba(99,102,241,.22)"></div>
+        </div>
+      </div>
+
+      <!-- MÓDULO 6: POO — JEFE FINAL. Sin botón de candidato a propósito:
+           este módulo no certifica a nadie más, es la confrontación final. -->
+      <div class="module-block" id="blk-6">
+        <div class="module-header theme-mod6" style="--accent:#EC4899;--glow:rgba(236,72,153,.28)">
+          <button type="button" class="module-toggle" onclick="toggleMod(6)" aria-expanded="false" aria-controls="levels-6">
+            <span class="material-icons" style="font-size:inherit;">castle</span>
+            <div class="mod-info">
+              <div class="mod-num">La Ciudadela</div>
+              <div class="mod-title">POO — El Jefe Final</div>
+              <div class="mod-desc">El mundo final: Programación Orientada a Objetos. Clases, herencia, polimorfismo, encapsulamiento y abstracción. ¿Estás listo?</div>
+            </div>
+          </button>
+          <button type="button" class="mod-candidate" onclick="openStory(6)" title="Leer historia">
+            <span class="material-icons" style="font-size:inherit;">castle</span>
+            <div class="mod-candidate-txt">
+              <span class="mod-candidate-name">Arquitecto</span>
+              <span class="mod-candidate-role">Jefe final</span>
+            </div>
+          </button>
+          <div class="mod-meta">
+            <div class="mod-progress-ring" id="ring-6">
+              <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="113.1" style="stroke:#EC4899"></circle>
+              </svg>
+              <div class="ring-pct" id="rpct-6" style="color:#EC4899">0%</div>
+            </div>
+            <span class="mod-chevron" aria-hidden="true">›</span>
+          </div>
+        </div>
+        <div class="levels-container theme-mod6" id="levels-6" style="--accent:#EC4899;--glow:rgba(236,72,153,.28)">
+          <div class="levels-path" id="path-6" style="--accent:#EC4899;--glow:rgba(236,72,153,.28)"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4.3 VISTA: EJERCICIO — pregunta individual de un nivel -->
+  <section id="view-exercise" class="view-container">
+    <div class="exercise-top">
+      <button type="button" class="btn-close" id="ex-close-btn" onclick="exitExercise()" aria-label="Salir del ejercicio"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">close</span></button>
+      <div class="progress-bar-bg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso del nivel">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+      </div>
+      <div class="ex-mod-badge" id="ex-mod-badge"></div>
+      <div class="boss-timer-wrap" id="boss-timer-wrap" style="display:none">
+        <div class="boss-timer" id="boss-timer">60</div>
+      </div>
+    </div>
+
+    <!-- 4.3.1 Introducción al Jefe (se muestra antes de las preguntas de boss fight) -->
+    <div id="boss-intro-container"></div>
+
+    <div id="exercise-question-wrap">
+      <div class="question-container" id="question-container">
+        <div class="q-header">
+          <div class="q-emoji-wrap" id="q-icon" aria-hidden="true"><span class="material-icons" style="font-size:inherit;">smart_toy</span></div>
+          <div class="q-meta">
+            <span class="q-badge" id="q-concept">—</span>
+            <p class="q-text" id="q-text">—</p>
+          </div>
+        </div>
+        <div class="options-grid" id="options-container"></div>
+      </div>
+      <button type="button" class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>Comprobar respuesta →</button>
+    </div>
+
+    <div id="boss-result-container"></div>
+  </section>
+
+  <!-- MINIJUEGO: CAZA-BUGS -->
+  <section id="view-game-bughunt" class="view-container" data-onshow="startBugHunt">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <button type="button" class="hub-btn ghost hub-back-btn" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">← Volver al Hub</button>
+        <p class="hub-eyebrow">Área de juego · referencia</p>
+        <h1 class="hub-title">Caza-<span style="color:#F97316">Bugs</span></h1>
+        <p class="hub-sub">Toca la línea que tiene el error antes de seguir a la siguiente ronda.</p>
+      </div>
+      <div class="bug-round-badge" id="bug-round-badge">Ronda 1 de 5</div>
+      <div class="bug-code" id="bug-code"></div>
+      <div class="bug-feedback" id="bug-feedback" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- MINIJUEGO: MEMORAMA LÓGICO -->
+  <section id="view-game-memory" class="view-container" data-onshow="startMemoryGame">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <button type="button" class="hub-btn ghost hub-back-btn" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">← Volver al Hub</button>
+        <p class="hub-eyebrow">Área de juego</p>
+        <h1 class="hub-title">Memorama <span style="color:#6FBF9B">Lógico</span></h1>
+        <p class="hub-sub">Encuentra los pares de conceptos de programación. Cada acierto revela un poco más el patrón.</p>
+      </div>
+      <div class="memo-stats">
+        <span><span class="material-icons" style="font-size: 1em; vertical-align: middle;">sync</span> Movimientos: <span id="memo-moves">0</span></span>
+        <span><span class="material-icons" style="font-size: 1em; vertical-align: middle;">check_circle</span> Pares: <span id="memo-matches">0/6</span></span>
+      </div>
+      <div class="memo-grid" id="memo-grid"></div>
+    </div>
+  </section>
+
+  <!-- MINIJUEGO: ORDENA LA LÓGICA -->
+  <section id="view-game-sequence" class="view-container" data-onshow="startSequenceGame">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <button type="button" class="hub-btn ghost hub-back-btn" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">← Volver al Hub</button>
+        <p class="hub-eyebrow">Área de juego · referencia</p>
+        <h1 class="hub-title">Ordena la <span style="color:#8B7CD8">Lógica</span></h1>
+        <p class="hub-sub" id="seq-title">Toca los pasos en el orden correcto para armar el algoritmo.</p>
+      </div>
+      <div class="seq-target" id="seq-target"></div>
+      <div class="seq-pool" id="seq-pool"></div>
+      <div class="seq-feedback" id="seq-feedback" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- MINIJUEGO: CARRERA DE CÓDIGO -->
+  <section id="view-game-racer" class="view-container" data-onshow="startRacerGame">
+    <div class="hub-zone">
+      <div class="hub-blob b1" aria-hidden="true"></div>
+      <div class="hub-blob b2" aria-hidden="true"></div>
+      <div class="hub-blob b3" aria-hidden="true"></div>
+      <div class="hub-blob b4" aria-hidden="true"></div>
+      <div class="hub-header">
+        <button type="button" class="hub-btn ghost hub-back-btn" onclick="navTo(document.querySelector('.nav-item[data-view=\'view-hub-games\']'))">← Volver al Hub</button>
+        <p class="hub-eyebrow">Área de juego</p>
+        <h1 class="hub-title">Carrera de <span style="color:#F0876B">Código</span></h1>
+        <p class="hub-sub" id="racer-question">—</p>
+      </div>
+      <div class="racer-track">
+        <div class="racer-lane-line" aria-hidden="true"></div>
+        <div class="racer-doors" id="racer-doors"></div>
+        <div class="racer-car" id="racer-car" aria-hidden="true"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">directions_car</span></div>
+      </div>
+      <div class="racer-feedback" id="racer-feedback" role="status" aria-live="polite"></div>
+      <div class="racer-score-final" id="racer-score-final">
+        <p class="racer-score-title">Puntaje final: <span id="racer-score-val">0/6</span></p>
+        <button type="button" class="hub-btn racer-retry-btn" onclick="startRacerGame()">Jugar otra vez</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 5. BANNER DE RETROALIMENTACIÓN (correcto / incorrecto) -->
+<div class="feedback-banner" id="feedback-banner" role="status" aria-live="polite">
+  <div class="feedback-content">
+    <div class="feedback-title" id="fb-title">—</div>
+    <p class="feedback-desc" id="fb-desc">—</p>
+  </div>
+  <button type="button" class="btn-next" id="btn-next" onclick="nextQuestion()">Continuar →</button>
+</div>
+
+<!-- 6. MODAL: NIVEL COMPLETADO -->
+<div class="modal-overlay" id="lvl-modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal-box">
+    <span class="modal-emoji" id="m-emoji" aria-hidden="true"><span class="material-icons" style="font-size:inherit;">celebration</span></span>
+    <h2 class="modal-title" id="m-title">¡Nivel superado!</h2>
+    <div class="modal-stars" id="m-stars"></div>
+    <div class="modal-xp" id="m-xp"><span class="material-icons" style="font-size: 14px; vertical-align: text-top; margin-right: 4px;">star</span> +60 XP</div>
+    <div class="modal-subtitle" id="m-sub"></div>
+    <button type="button" class="modal-btn" id="modal-next-btn" onclick="goToNextLevel()">Siguiente nivel →</button>
+    <button type="button" class="modal-btn-secondary" onclick="closeModal()">Volver al mapa →</button>
+  </div>
+</div>
+
+<!-- MODAL: HISTORIA / CAPÍTULO (estilo novela visual) -->
+<div class="story-modal" id="story-modal" role="dialog" aria-modal="true" aria-labelledby="story-card-name">
+  <div class="story-card" id="story-card">
+    <div class="story-card-hero" id="story-card-hero">
+      <button type="button" class="story-card-close" onclick="closeStory()" aria-label="Cerrar"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">close</span></button>
+      <div class="story-card-portrait" id="story-card-portrait" aria-hidden="true"><span class="material-icons" style="font-size:inherit;">person_search</span></div>
+      <div class="story-card-nodo" id="story-card-nodo">GREMIO DEL NODO</div>
+      <h2 class="story-card-name" id="story-card-name">Ren Kaster</h2>
+      <div class="story-card-role" id="story-card-role">Cazatalentos Senior</div>
+    </div>
+    <div class="story-card-body">
+      <span class="story-card-tag" id="story-card-tag">Prólogo</span>
+      <blockquote class="story-card-quote" id="story-card-quote">"Todo Lógico empieza creyendo que no tiene nada especial."</blockquote>
+      <div class="story-card-txt" id="story-card-txt"></div>
+      <button type="button" class="story-card-btn" id="story-card-btn" onclick="closeStory()">Entendido →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/codigo_rehecho/javascript/index.js"></script>
+<script src="/codigo_rehecho/javascript/expedientes.js"></script>
+<script src="/codigo_rehecho/javascript/glosario.js"></script>
+<script src="/codigo_rehecho/javascript/desafio_diario.js"></script>
+<script src="/codigo_rehecho/javascript/hub_aprendizaje.js"></script>
+<script src="/codigo_rehecho/javascript/juegos.js"></script>
+<script src="/codigo_rehecho/javascript/juegos_folder_js/cazabugs.js"></script>
+<script src="/codigo_rehecho/javascript/juegos_folder_js/memorama.js"></script>
+<script src="/codigo_rehecho/javascript/juegos_folder_js/secuencia.js"></script>
+<script src="/codigo_rehecho/javascript/juegos_folder_js/carrera.js"></script>
+<script src="/codigo_rehecho/javascript/lacaceria-datos.js"></script>
+<script src="/codigo_rehecho/javascript/lacaceria.js"></script>
+<script src="/codigo_rehecho/javascript/analitica_docente.js"></script>
+</body>
+</html>

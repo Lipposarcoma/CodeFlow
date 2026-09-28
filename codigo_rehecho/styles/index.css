@@ -1,0 +1,584 @@
+/* ══════════════════════════════════════════════════════════
+   1. VARIABLES GLOBALES (DESIGN TOKENS)
+   ══════════════════════════════════════════════════════════ */
+/* — Tema oscuro (valores por defecto) — */
+:root {
+  --bg:#08090D;--surface:#0F1016;--surface2:#16171E;--surface3:#1E1F28;
+  --border:rgba(255,255,255,0.06);--border-h:rgba(255,255,255,0.13);
+  --text:#EEEEF5;--text2:#B0B1C4;--muted:#52536A;--muted2:#343548;--shadow:rgba(0,0,0,.5);
+  --mod1:#4F8EF7;--g1:rgba(79,142,247,.18);
+  --mod2:#A855F7;--g2:rgba(168,85,247,.18);
+  --mod3:#F97316;--g3:rgba(249,115,22,.18);
+  --mod4:#10B981;--g4:rgba(16,185,129,.18);
+  --mod5:#6366F1;--g5:rgba(99,102,241,.18);
+  --mod6:#EC4899;--g6:rgba(236,72,153,.18);
+  --boss:#DC2626;--boss-glow:rgba(220,38,38,.28);
+  --green:#22C55E;--red:#EF4444;--yellow:#FBBF24;--orange:#FB923C;
+  --sidebar-w:300px;--transition-theme:background .35s,color .35s,border-color .35s,box-shadow .35s;
+  --font-main:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-display:'Segoe UI',Helvetica,Arial,sans-serif;
+}
+/* — Tema claro (sobrescribe los tokens de arriba) — */
+[data-theme="light"]{
+  --bg:#F0F2FA;--surface:#FFFFFF;--surface2:#F4F5FB;--surface3:#E8EAF4;
+  --border:rgba(0,0,0,0.08);--border-h:rgba(0,0,0,0.16);
+  --text:#111218;--text2:#44465A;--muted:#7A7C96;--muted2:#B0B2CC;--shadow:rgba(0,0,0,.12);
+}
+
+/* ══════════════════════════════════════════════════════════
+   2. RESET Y ESTILOS BASE
+   ══════════════════════════════════════════════════════════ */
+*,*::before,*::after{
+   box-sizing:border-box;
+   margin:0;
+   padding:0;
+}
+html{
+   height:100%;
+}
+body{
+   background:var(--bg);
+   color:var(--text);
+   font-family:var(--font-main);
+   font-size:15px;
+   display:flex;
+   height:100vh;
+   overflow:hidden;
+   transition:var(--transition-theme);
+}
+/* — Canvas de fondo animado (partículas conectadas, ver JS) — */
+#bg-canvas{
+   position:fixed;
+   inset:0;
+   z-index:0;
+   pointer-events:none;
+   transition:opacity .5s;
+}
+[data-theme="light"] #bg-canvas{
+   opacity:.15;
+}
+[data-theme="dark"] #bg-canvas{
+   opacity:.45;
+}
+/* — Textura de ruido (grain) superpuesta a toda la página — */
+body::after{
+   content:'';
+   position:fixed;
+   inset:0;
+   z-index:1;
+   pointer-events:none;
+   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+   background-size:160px;
+}
+[data-theme="light"] body::after{
+   opacity:.012;
+}
+[data-theme="dark"] body::after{
+   opacity:.02;
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. TOPBAR — barra superior (botón de cambio de tema)
+   ══════════════════════════════════════════════════════════ */
+.topbar{
+   position:fixed;
+   top:0;
+   left:var(--sidebar-w);
+   right:0;
+   height:44px;
+   z-index:40;
+   display:flex;
+   align-items:center;
+   justify-content:flex-end;
+   padding:0 20px;
+   gap:8px;
+   background:linear-gradient(to bottom,var(--bg) 60%,transparent);
+   pointer-events:none;
+}
+.topbar-actions{
+   display:flex;
+   align-items:center;
+   gap:7px;
+   pointer-events:all;
+}
+.theme-toggle{
+   width:38px;
+   height:38px;
+   border-radius:9px;
+   background:var(--surface);
+   border:1px solid var(--border);
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   cursor:pointer;
+   font-size:18px;
+   transition:all .2s;
+   color: #5c6ac4;
+}
+.theme-toggle:hover{
+   border-color:var(--border-h);
+   transform:scale(1.1);
+}
+.theme-toggle:focus-visible{
+   outline:2px solid var(--mod1);
+   outline-offset:2px;
+}
+[data-theme="dark"] .theme-toggle {
+  color: #fbd38d;
+}
+
+/* ══════════════════════════════════════════════════════════
+   4. SIDEBAR — menú lateral izquierdo
+   ══════════════════════════════════════════════════════════ */
+/* — Contenedor y resplandor decorativo — */
+.sidebar{
+   width:var(--sidebar-w);
+   background:var(--surface);
+   border-right:1px solid var(--border);
+   padding:18px 11px;
+   display:flex;
+   flex-direction:column;
+   gap:2px;
+   z-index:50;
+   flex-shrink:0;
+   position:relative;
+   overflow-y:auto;
+   overflow-x:hidden;
+   transition:var(--transition-theme);
+}
+.sidebar::-webkit-scrollbar{
+   width:3px;
+}
+.sidebar::-webkit-scrollbar-thumb{
+   background:var(--muted2);
+   border-radius:4px;
+}
+.sidebar::after{
+   content:'';
+   position:absolute;
+   top:0;
+   right:-1px;
+   width:1px;
+   height:100%;
+   background:linear-gradient(to bottom,transparent,rgba(79,142,247,.4) 35%,rgba(99,102,241,.25) 65%,transparent);
+   pointer-events:none;
+}
+[data-theme="light"] .sidebar::after{
+   background:linear-gradient(to bottom,transparent,rgba(79,142,247,.25) 40%,transparent);
+}
+.sidebar-glow{
+   position:absolute;
+   top:-50px;
+   left:-50px;
+   width:180px;
+   height:180px;
+   background:radial-gradient(circle,rgba(79,142,247,.06),transparent 70%);
+   pointer-events:none;
+}
+/* — Marca / logo "CODEFLOW" — */
+.brand{
+   font-family:var(--font-display);
+   font-size:25px;
+   font-weight:900;
+   color:var(--text);
+   padding:4px 10px 18px;
+   display:flex;
+   align-items:center;
+   gap:10px;
+   letter-spacing:-.5px;
+   position:relative;
+   z-index:1;
+}
+.brand-icon{
+   width:34px;
+   height:34px;
+   background:linear-gradient(135deg,var(--mod1),var(--mod5));
+   border-radius:9px;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   font-size:16px;
+   box-shadow:0 0 22px rgba(79,142,247,.4);
+   animation:brandPulse 3.5s ease-in-out infinite;
+}
+@keyframes brandPulse{
+  0%,100%{box-shadow:0 0 18px rgba(79,142,247,.35);}
+  50%{box-shadow:0 0 30px rgba(99,102,241,.55);}
+}
+.brand span{
+   color:var(--mod1);
+}
+/* — Ítems de navegación (Mapa, Dossier, Analytics, etc.) — */
+.nav-section{
+   font-size:11px;
+   font-weight:700;
+   letter-spacing:2px;
+   text-transform:uppercase;
+   color:var(--muted2);
+   padding:12px 12px 5px;
+   position:relative;
+   z-index:1;
+}
+[data-theme="dark"] .nav-section{
+   color:#F5F5FA;
+}
+[data-theme="light"] .nav-section{
+   color:#1A1B22;
+}
+[data-theme="dark"] .xp-sidebar-label span:first-child{
+   color:#F5F5FA;
+}
+[data-theme="light"] .xp-sidebar-label span:first-child{
+   color:#1A1B22;
+}
+[data-theme="dark"] #next-unlock-desc{
+   color:#F5F5FA;
+}
+[data-theme="light"] #next-unlock-desc{
+   color:#1A1B22;
+}
+/* nav-item ahora es un <button> real (antes era <div>): se resetean los
+   estilos nativos del navegador (fondo, borde, fuente, alineación) para
+   que se vea exactamente igual que antes, y se agrega un estado de foco
+   visible para navegación por teclado. */
+.nav-item{
+   display:flex;
+   align-items:center;
+   gap:10px;
+   width:100%;
+   padding:11px 12px;
+   border-radius:9px;
+   border:none;
+   background:none;
+   font:inherit;
+   text-align:left;
+   font-size:16px;
+   font-weight:500;
+   color:var(--muted);
+   cursor:pointer;
+   transition:all .2s;
+   position:relative;
+   overflow:hidden;
+   z-index:1;
+}
+.nav-item:focus-visible{
+   outline:2px solid var(--mod1);
+   outline-offset:2px;
+}
+.nav-item::before{
+   content:'';
+   position:absolute;
+   inset:0;
+   opacity:0;
+   transition:opacity .2s;
+   background:linear-gradient(90deg,rgba(79,142,247,.07),transparent);
+}
+.nav-item:hover{
+   color:var(--text);
+}
+.nav-item:hover::before{
+   opacity:1;
+}
+.nav-item.active{
+   background:rgba(79,142,247,.1);
+   color:var(--text);
+   border:1px solid rgba(79,142,247,.15);
+}
+[data-theme="light"] .nav-item.active{
+   background:rgba(79,142,247,.08);
+   border-color:rgba(79,142,247,.2);
+}
+.nav-item.active::after{
+   content:'';
+   position:absolute;
+   left:0;
+   top:50%;
+   transform:translateY(-50%);
+   width:3px;
+   height:55%;
+   background:var(--mod1);
+   border-radius:0 3px 3px 0;
+   box-shadow:0 0 8px var(--mod1);
+}
+.nav-icon{
+   font-size: 20px;
+   width: 24px;
+   text-align: center;
+   line-height: 1;
+   color: inherit; 
+}
+/* — Insignia de nivel + barra de XP — */
+.level-badge{
+   display:flex;
+   align-items:center;
+   gap:7px;
+   padding:8px 12px;
+   border-radius:9px;
+   margin:6px 0 4px;
+   border:1px solid rgba(251,191,36,.14);
+   background:rgba(251,191,36,.05);
+   position:relative;
+   z-index:1;
+   transition:all .4s;
+}
+.level-badge-name{
+   font-family:var(--font-display);
+   font-size:15px;
+   font-weight:800;
+   color:var(--yellow);
+}
+.level-badge-sub{
+   font-size:12px;
+   color:var(--muted);
+   margin-top:1px;
+}
+.xp-sidebar-wrap{
+   padding:6px 12px 2px;
+   position:relative;
+   z-index:1;
+}
+.xp-sidebar-label{
+   display:flex;
+   justify-content:space-between;
+   font-size:12px;
+   color:var(--muted);
+   margin-bottom:5px;
+   font-weight:600;
+}
+.xp-sidebar-label span:last-child{
+   color:var(--yellow);
+}
+.xp-sidebar-bar{
+   height:5px;
+   background:var(--surface3);
+   border-radius:100px;
+   overflow:hidden;
+}
+.xp-sidebar-fill{
+   height:100%;
+   background:linear-gradient(90deg,var(--yellow),var(--orange));
+   border-radius:100px;
+   transition:width .9s cubic-bezier(.22,1,.36,1);
+   box-shadow:0 0 8px rgba(251,191,36,.3);
+}
+/* — Hint de personalización cosmética (aún no disponible) — */
+.cosmetic-hint{
+   padding:9px 12px;
+   margin:4px 0;
+   background:rgba(251,191,36,.04);
+   border:1px dashed rgba(251,191,36,.2);
+   border-radius:9px;
+   font-size:12.5px;
+   color:var(--muted);
+   line-height:1.5;
+   position:relative;
+   z-index:1;
+}
+.cosmetic-hint strong{
+   color:var(--yellow);
+   display:block;
+   margin-bottom:2px;
+}
+/* — Pie del sidebar (estado del sistema) — */
+.sidebar-footer{
+   margin-top:auto;
+   padding:10px 12px;
+   background:var(--surface2);
+   border-radius:10px;
+   border:1px solid var(--border);
+   position:relative;
+   z-index:1;
+}
+.sidebar-footer p{
+   font-size:12.5px;
+   color:var(--muted);
+   line-height:1.7;
+}
+.sidebar-footer strong{
+   color:var(--text2);
+   font-weight:600;
+   display:block;
+   margin-bottom:1px;
+}
+.status-dot{
+   display:inline-block;
+   width:6px;
+   height:6px;
+   border-radius:50%;
+   background:var(--green);
+   margin-right:5px;
+   box-shadow:0 0 6px var(--green);
+   animation:blink 2.2s ease-in-out infinite;
+}
+@keyframes blink{
+  0%,100%{opacity:1;}
+  50%{opacity:.3;}
+}
+
+/* ══════════════════════════════════════════════════════════
+   5. MAIN CONTENT — contenedor genérico compartido por todas las vistas
+   (el contenido específico de cada vista vive en su propio CSS,
+   ej: lacaceria.css para la vista "La Cacería")
+   ══════════════════════════════════════════════════════════ */
+.main-content{
+   flex:1;
+   overflow-y:auto;
+   display:flex;
+   justify-content:center;
+   align-items:flex-start;
+   padding:28px 32px;
+   padding-top:52px;
+   position:relative;
+   z-index:5;
+}
+.main-content::-webkit-scrollbar{
+   width:3px;
+}
+.main-content::-webkit-scrollbar-thumb{
+   background:var(--muted2);
+   border-radius:4px;
+}
+.view-container{
+   width:100%;
+   max-width:880px;
+   display:none;
+   flex-direction:column;
+}
+.view-container.active{
+   display:flex;
+   animation:fadeUp .38s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+/* — Clases utilitarias genéricas: las reutiliza cualquier vista
+     (Hub de Aprendizaje, Explorar Juegos, La Cacería, Glosario...),
+     por eso viven aquí y no en el CSS de una sección específica — */
+.page-title{
+   font-family:var(--font-display);
+   font-size:30px;
+   font-weight:900;
+   color:var(--text);
+   letter-spacing:-.6px;
+   line-height:1.15;
+   margin-bottom:4px;
+}
+.page-title span{
+   color:var(--mod1);
+}
+.page-sub{
+   font-size:14px;
+   color:var(--muted);
+   margin-bottom:20px;
+}
+.section-label{
+   font-size:12px;
+   font-weight:700;
+   letter-spacing:2px;
+   text-transform:uppercase;
+   color:var(--muted);
+   margin-bottom:16px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. TOAST — aviso flotante (usado por el cambio de tema y por
+   cualquier otra sección que quiera mostrar un aviso)
+   ══════════════════════════════════════════════════════════ */
+#toast{
+   position:fixed;
+   bottom:22px;
+   right:22px;
+   background:var(--surface);
+   border:1px solid var(--border);
+   border-radius:12px;
+   padding:12px 17px;
+   font-size:14px;
+   font-weight:500;
+   color:var(--text);
+   z-index:600;
+   transition:all .3s;
+   opacity:0;
+   transform:translateY(10px);
+   pointer-events:none;
+   max-width:300px;
+   backdrop-filter:blur(20px);
+   box-shadow:0 8px 28px var(--shadow);
+}
+
+/* ══════════════════════════════════════════════════════════
+   7. EFECTOS DE GAMIFICACIÓN COMPARTIDOS
+   Flash de "+XP", aviso de subida de nivel y confetti. Cualquier
+   sección puede disparar estos efectos (ver showXp/launchConfetti/
+   showLevelUpNotif en este mismo archivo).
+   ══════════════════════════════════════════════════════════ */
+.xp-flash{
+   position:fixed;
+   top:52px;
+   right:24px;
+   background:rgba(8,9,13,.96);
+   border:1px solid rgba(251,191,36,.28);
+   color:var(--yellow);
+   padding:9px 16px;
+   border-radius:100px;
+   font-size:12.5px;
+   font-weight:700;
+   font-family:var(--font-display);
+   z-index:500;
+   pointer-events:none;
+   animation:xpPop 1.8s cubic-bezier(.22,1,.36,1) forwards;
+}
+[data-theme="light"] .xp-flash{
+   background:rgba(255,255,240,.97);
+   box-shadow:0 4px 16px rgba(0,0,0,.12);
+}
+@keyframes xpPop{
+  0%{opacity:0;transform:translateY(10px) scale(.85);}
+  15%{opacity:1;transform:translateY(0) scale(1.05);}
+  25%{transform:scale(1);}
+  70%{opacity:1;transform:translateY(-6px);}
+  100%{opacity:0;transform:translateY(-22px) scale(.9);}
+}
+.levelup-notif{
+   position:fixed;
+   top:50%;
+   left:50%;
+   transform:translate(-50%,-50%) scale(.8);
+   background:var(--surface);
+   border:2px solid var(--yellow);
+   border-radius:22px;
+   padding:36px 44px;
+   text-align:center;
+   z-index:600;
+   pointer-events:none;
+   box-shadow:0 0 60px rgba(251,191,36,.25);
+   animation:levelUpAnim 3s cubic-bezier(.22,1,.36,1) forwards;
+}
+.levelup-notif h2{
+   font-family:var(--font-display);
+   font-size:22px;
+   font-weight:900;
+   color:var(--yellow);
+   margin-bottom:6px;
+}
+.levelup-notif p{
+   font-size:13px;
+   color:var(--muted);
+}
+@keyframes levelUpAnim{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.7);}
+  15%{opacity:1;transform:translate(-50%,-50%) scale(1.05);}
+  25%{transform:translate(-50%,-50%) scale(1);}
+  75%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.95) translateY(-20px);}
+}
+.confetti-piece{
+   position:fixed;
+   z-index:450;
+   pointer-events:none;
+   animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg);}
+  100%{opacity:0;transform:translateY(100vh) rotate(720deg);}
+}
