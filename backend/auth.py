@@ -182,8 +182,3 @@ def yo(usuario=Depends(usuario_actual)):
     """Devuelve quién eres según tu token (el frontend lo usará al cargar)."""
     return usuario
 
-
-@router.get("/solo-docentes")
-def solo_docentes(usuario=Depends(requiere_rol("docente"))):
-    """Ruta de PRUEBA para comprobar que el rol se respeta. Se borra después."""
-    return {"mensaje": f"Hola docente {usuario['nombre']}"}
