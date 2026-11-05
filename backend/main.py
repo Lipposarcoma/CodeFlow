@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from accesibilidad import router as accesibilidad_router
 from auth import router as auth_router
 from db import abrir_pool, cerrar_pool, conectar
 from desafio import router as desafio_router
@@ -41,6 +42,7 @@ app.include_router(auth_router)
 app.include_router(juego_router)
 app.include_router(docente_router)
 app.include_router(desafio_router)
+app.include_router(accesibilidad_router)
 
 
 @app.get("/")

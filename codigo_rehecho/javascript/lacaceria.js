@@ -305,7 +305,7 @@ async function startLevel(id,lvlIdx){
   const m=MODS[id];
   const badge=document.getElementById('ex-mod-badge');
   badge.innerHTML=`${m.icon} ${m.name}`;
-  badge.style.cssText=`background:${m.color}1f;border:1px solid ${m.color}3d;color:${m.color};display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;font-size:11px;font-weight:700;flex-shrink:0;`;
+  badge.style.cssText=`background:${m.color}1f;border:1px solid ${m.color}3d;color:${m.color};display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;font-size:calc(11px * var(--a11y-fs, 1));font-weight:700;flex-shrink:0;`;
   document.getElementById('progress-bar').classList.remove('boss-fill');
 
   loadQ();
@@ -579,7 +579,7 @@ function startBoss(id){
 
   const badge=document.getElementById('ex-mod-badge');
   badge.innerHTML='<span class="material-icons" style="font-size: 1em; vertical-align: middle;">dangerous</span> BOSS FIGHT';
-  badge.style.cssText='background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.3);color:#f87171;display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;font-size:11px;font-weight:700;flex-shrink:0;';
+  badge.style.cssText='background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.3);color:#f87171;display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:100px;font-size:calc(11px * var(--a11y-fs, 1));font-weight:700;flex-shrink:0;';
   document.getElementById('exercise-question-wrap').style.display='none';
   document.getElementById('boss-result-container').innerHTML='';
   document.getElementById('progress-bar').classList.add('boss-fill');

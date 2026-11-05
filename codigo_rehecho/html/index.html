@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="/codigo_rehecho/styles/juegos_folder_css/carrera.css">
 <link rel="stylesheet" href="/codigo_rehecho/styles/auth.css">
 <link rel="stylesheet" href="/codigo_rehecho/styles/docente.css">
+<link rel="stylesheet" href="/codigo_rehecho/styles/accesibilidad.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -41,7 +42,7 @@
   <div class="brand"><div class="brand-icon"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">track_changes</span></div>CODE<span>FLOW</span></div>
 
   <div class="level-badge" id="level-badge" data-solo-rol="estudiante">
-    <div id="level-icon" style="font-size:18px"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">eco</span></div>
+    <div id="level-icon" style="font-size:calc(18px * var(--a11y-fs, 1))"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">eco</span></div>
     <div>
       <div class="level-badge-name" id="level-name">Aprendiz</div>
       <div class="level-badge-sub" id="level-sub">Nivel 1 · 0 XP</div>
@@ -755,7 +756,7 @@
     <span class="modal-emoji" id="m-emoji" aria-hidden="true"><span class="material-icons" style="font-size:inherit;">celebration</span></span>
     <h2 class="modal-title" id="m-title">¡Nivel superado!</h2>
     <div class="modal-stars" id="m-stars"></div>
-    <div class="modal-xp" id="m-xp"><span class="material-icons" style="font-size: 14px; vertical-align: text-top; margin-right: 4px;">star</span> +60 XP</div>
+    <div class="modal-xp" id="m-xp"><span class="material-icons" style="font-size: calc(14px * var(--a11y-fs, 1)); vertical-align: text-top; margin-right: 4px;">star</span> +60 XP</div>
     <div class="modal-subtitle" id="m-sub"></div>
     <button type="button" class="modal-btn" id="modal-next-btn" onclick="goToNextLevel()">Siguiente nivel →</button>
     <button type="button" class="modal-btn-secondary" onclick="closeModal()">Volver al mapa →</button>
@@ -892,6 +893,7 @@
 <script src="/codigo_rehecho/javascript/lacaceria.js"></script>
 <script src="/codigo_rehecho/javascript/analitica_docente.js"></script>
 <script src="/codigo_rehecho/javascript/docente.js"></script>
+<script src="/codigo_rehecho/javascript/accesibilidad.js"></script>
 <script src="/codigo_rehecho/javascript/auth.js"></script>
 
 </body>

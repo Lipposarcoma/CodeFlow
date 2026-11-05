@@ -344,6 +344,9 @@ function entrar(usuario){
   // Trae del servidor el progreso guardado (XP, estrellas, jefes vencidos)
   if(typeof cargarProgresoServidor === 'function') cargarProgresoServidor();
 
+  // Trae las preferencias de accesibilidad guardadas en la cuenta
+  if(typeof cargarAccesibilidad === 'function') cargarAccesibilidad();
+
   showToast('Hola, ' + usuario.nombre.split(' ')[0]);
 }
 
